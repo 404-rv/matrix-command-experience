@@ -5,69 +5,73 @@
 Transform your PowerShell terminal into a Matrix-themed command center with digital rain effects, hacker sequences, and interactive experiences.
 
 ![PowerShell](https://img.shields.io/badge/PowerShell-5.1+-blue)
+![Windows Terminal](https://img.shields.io/badge/Windows%20Terminal-Recommended-brightgreen)
 ![License](https://img.shields.io/badge/license-MIT-green)
 
-## Features
+## Quick Start
 
-### Hacker Sequences
-Terminal animations inspired by The Matrix trilogy:
-- `hacker` - Quick mainframe access
-- `hacker -Trace` - They're tracking you...
-- `hacker -Boot` - System boot sequence
-- `hacker -Deep` - Deep dive: layers, jack-in, red pill
-- `hacker -Infect` - Virus spread, containment breach
-- `hacker -Wake` - Pod ejection, awakening
-- `hacker -Hunt` - Agent pursuit, escape
-- `hacker -Swarm` - Sentinel attack, EMP
-- `hacker -One` - The One: skill upload
-- `hacker -Deja` - Deja vu: black cat glitch
-- `hacker -Exit` - Phone trace escape
-- `hacker -Train` - Dojo sparring program
-- `hacker -Oracle` - Cryptic prophecy
+```powershell
+# 1. Clone the repository
+git clone https://github.com/404-rv/matrix-command-experience.git
 
-### Matrix Rain Variants
-Digital rain screensavers with different effects:
-- `matrix` - Classic green rain
-- `matrix -Katakana` - Japanese characters
-- `matrix -Glitch` - Corrupted, flickering
-- `matrix -Dead` - Skull reveal
-- `matrix -One` - Freeze effect (Neo's power)
-- `matrix -Deja` - Stuttering columns
-- `matrix -Oracle` - Cryptic messages in rain
-- `matrix -Train` - Grid construct (dojo)
+# 2. Navigate to the folder
+cd matrix-command-experience
 
-### Rabbit Holes
-Complete experiences combining sequences with rain:
-- `whiterabbit` - Classic intro -> matrix rain
-- `blackrabbit` - Deep dive -> glitch matrix
-- `deadrabbit` - Infection -> skull matrix
-- `redrabbit` - Red pill -> awakening
-- `runrabbit` - Agent chase -> escape
-- `steelrabbit` - Sentinels -> EMP -> cyan matrix
-- `onerabbit` - The One -> freeze matrix
-- `glitchrabbit` - Deja vu -> stutter matrix
-- `exitrabbit` - Phone escape -> safe
-- `trainrabbit` - Dojo training -> grid matrix
-- `oraclerabbit` - Prophecy -> oracle matrix
+# 3. Run the installer
+.\Install-MatrixCommands.ps1
 
-### Interactive Menu
-Type `neo` to launch the Matrix Command Experience menu with:
-- Typewriter effect header
-- All commands organized by category
-- Operator Manual (`?`) to learn commands
+# 4. Start the Matrix!
+neo
+```
 
-## Installation
+## Requirements
 
-### Quick Install
+### Required
+- **Windows PowerShell 5.1+** or **PowerShell Core 7+**
+- **Windows Terminal** (strongly recommended) or any terminal supporting ANSI escape codes
+
+### Recommended
+- **Unicode-capable font** for the best experience:
+  - Cascadia Code (comes with Windows Terminal)
+  - Cascadia Mono
+  - Consolas
+  - Any Nerd Font (FiraCode Nerd Font, JetBrains Mono Nerd Font, etc.)
+
+### Why Windows Terminal?
+The classic Command Prompt (cmd) and older PowerShell hosts don't fully support ANSI escape codes. Windows Terminal provides:
+- Full ANSI color support
+- Unicode character rendering (Katakana, block characters)
+- Better performance for animations
+
+## Installation Options
+
+### Option 1: Quick Install (Recommended)
+```powershell
+# Clone and run installer
+git clone https://github.com/404-rv/matrix-command-experience.git
+cd matrix-command-experience
+.\Install-MatrixCommands.ps1
+```
+
+The installer will:
+1. Create an install directory (`Documents\MatrixCommands`)
+2. Copy all Matrix scripts
+3. Add the module to your PowerShell profile
+4. Load the commands immediately
+
+### Option 2: Custom Location
+```powershell
+.\Install-MatrixCommands.ps1 -InstallPath "D:\Scripts\Matrix"
+```
+
+### Option 3: Manual Installation
 1. Download or clone this repository
-2. Copy the contents of `Install-MatrixCommands.ps1` to your PowerShell profile
-3. Reload your profile: `. $PROFILE`
-4. Type `neo` to start!
-
-### Manual Install
-1. Copy the `.ps1` files to a folder (e.g., `C:\Dev\_PROJECTS\_SCRIPTS\matrix-rain\`)
-2. Add the function definitions to your PowerShell profile
-3. Update the paths in the `matrix` function to point to your `.ps1` files
+2. Copy all `.ps1` files and `MatrixCommands.psm1` to your desired location
+3. Add this line to your PowerShell profile (`$PROFILE`):
+   ```powershell
+   . "C:\path\to\MatrixCommands.psm1"
+   ```
+4. Reload your profile: `. $PROFILE`
 
 ### Finding Your Profile
 ```powershell
@@ -81,9 +85,63 @@ if (!(Test-Path $PROFILE)) { New-Item -Path $PROFILE -Force }
 notepad $PROFILE
 ```
 
-## Requirements
-- Windows PowerShell 5.1+ or PowerShell Core 7+
-- A terminal that supports ANSI escape codes (Windows Terminal recommended)
+## Features
+
+### Hacker Sequences
+Terminal animations inspired by The Matrix trilogy:
+
+| Command | Theme | Effect |
+|---------|-------|--------|
+| `hacker` | Mainframe | Quick access sequence |
+| `hacker -Trace` | Trace | They're tracking you... |
+| `hacker -Boot` | Boot | System initialization |
+| `hacker -Deep` | Deep Dive | Layers, neural jack-in, red pill |
+| `hacker -Infect` | Infection | Virus spread, containment breach |
+| `hacker -Wake` | Awakening | Pod ejection, unplug |
+| `hacker -Hunt` | Agent Hunt | Pursuit, evasion, escape |
+| `hacker -Swarm` | Sentinels | Ship attack, EMP discharge |
+| `hacker -One` | The One | Skill upload, power awakening |
+| `hacker -Deja` | Deja Vu | Black cat, glitch in Matrix |
+| `hacker -Exit` | Phone Exit | Trace vs escape countdown |
+| `hacker -Train` | Training | Dojo sparring program |
+| `hacker -Oracle` | Oracle | Cryptic prophecy |
+
+### Matrix Rain Variants
+Digital rain screensavers with different effects:
+
+| Command | Effect |
+|---------|--------|
+| `matrix` | Classic green rain |
+| `matrix -Katakana` | Japanese half-width Katakana characters |
+| `matrix -Glitch` | Corrupted, flickering glitch effect |
+| `matrix -Dead` | Skull slowly reveals in the rain |
+| `matrix -One` | Freeze effect (Neo stops the bullets) |
+| `matrix -Deja` | Stuttering columns (glitch in the Matrix) |
+| `matrix -Oracle` | Cryptic messages fade in/out |
+| `matrix -Train` | Grid construct (dojo training pattern) |
+
+### Rabbit Holes
+Complete experiences combining a hacker sequence with matching rain:
+
+| Command | Journey |
+|---------|---------|
+| `whiterabbit` | Classic intro -> matrix rain |
+| `blackrabbit` | Deep dive -> glitch matrix |
+| `deadrabbit` | Infection -> skull matrix |
+| `redrabbit` | Red pill -> awakening |
+| `runrabbit` | Agent chase -> escape |
+| `steelrabbit` | Sentinels -> EMP -> cyan matrix |
+| `onerabbit` | The One -> freeze matrix |
+| `glitchrabbit` | Deja vu -> stutter matrix |
+| `exitrabbit` | Phone escape -> safe |
+| `trainrabbit` | Dojo training -> grid matrix |
+| `oraclerabbit` | Prophecy -> oracle matrix |
+
+### Interactive Menu
+Type `neo` to launch the Matrix Command Experience menu with:
+- Typewriter effect header animation
+- All commands organized by category
+- Operator Manual (`?`) to learn commands with themed "skill upload" presentation
 
 ## Usage
 
@@ -105,9 +163,9 @@ whiterabbit
 ### Exiting Screensavers
 Press any key to exit the matrix rain effects.
 
-## Customization
+### Customization
 
-### Speed
+#### Speed
 All matrix variants accept a `-Speed` parameter (default: 33ms):
 ```powershell
 matrix -Speed 20        # Faster
@@ -115,7 +173,7 @@ matrix -Speed 50        # Slower
 matrix -One -Speed 40   # Freeze effect, custom speed
 ```
 
-### Colors
+#### Colors
 The classic matrix function supports color options:
 ```powershell
 matrix -Color Green    # Default
@@ -124,19 +182,48 @@ matrix -Color Red      # Danger mode
 matrix -Color Magenta  # Oracle vibes
 ```
 
+## Troubleshooting
+
+### Characters look wrong or garbled
+- **Solution**: Use Windows Terminal with a Unicode-capable font
+- Check your font supports: Japanese Katakana (ア, カ, サ) and block characters (█, ░)
+- Try: Cascadia Code, Consolas, or any Nerd Font
+
+### Colors don't display
+- **Solution**: Use Windows Terminal instead of Command Prompt
+- Ensure your terminal supports ANSI escape codes
+- Try running: `$host.UI.SupportsVirtualTerminal` (should return `True`)
+
+### Commands not found after installation
+- Reload your profile: `. $PROFILE`
+- Or restart your terminal
+- Verify the module is loaded: `Get-Command neo`
+
+### Animation is too slow/fast
+- Adjust the `-Speed` parameter (lower = faster)
+- Default is 33ms per frame
+
 ## File Structure
 ```
-matrix-rain/
-├── matrix.ps1                  # Classic matrix rain
+matrix-command-experience/
+├── Install-MatrixCommands.ps1  # Installer script
+├── MatrixCommands.psm1         # PowerShell module with all functions
+├── matrix.ps1                  # Classic matrix rain engine
 ├── matrix-dead.ps1             # Skull reveal variant
 ├── matrix-deja.ps1             # Stuttering columns
 ├── matrix-katakana-glitch.ps1  # Glitchy effect
 ├── matrix-one.ps1              # Freeze effect
 ├── matrix-oracle.ps1           # Cryptic messages
 ├── matrix-train.ps1            # Grid construct
-├── SEQUENCE-IDEAS.md           # Development notes
 └── README.md                   # This file
 ```
+
+## Technical Details
+- Pure PowerShell (no external dependencies)
+- ANSI escape codes for colors and cursor control
+- StringBuilder for efficient frame rendering
+- Half-width Katakana (0xFF66-0xFF9D) for authentic Matrix feel
+- Screen buffer management for smooth animations
 
 ## Credits
 - Created by **Sassy Labs**
