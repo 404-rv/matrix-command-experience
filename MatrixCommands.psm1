@@ -9,7 +9,7 @@ $script:MatrixScriptPath = $PSScriptRoot
 function Write-Typewriter($text, $color = "White", $delay = 15) {
     foreach ($char in $text.ToCharArray()) {
         Write-Host $char -NoNewline -ForegroundColor $color
-        Start-Sleep -Milliseconds $delay
+        Start-EscapableSleep -Milliseconds $delay
     }
 }
 
@@ -20,6 +20,27 @@ function Show-NeoItem($num, $name, $desc, $nameColor = "Green") {
     Write-Host "] " -NoNewline -ForegroundColor DarkGreen
     Write-Host "$($name.PadRight(16))" -NoNewline -ForegroundColor $nameColor
     Write-Host $desc -ForegroundColor DarkGray
+}
+
+# Escape flag for hacker sequences
+$script:HackerEscaped = $false
+
+# Escapable sleep - allows user to press Escape to exit hacker sequences
+function Start-EscapableSleep {
+    param([int]$Milliseconds)
+    $elapsed = 0
+    $interval = 50
+    while ($elapsed -lt $Milliseconds) {
+        if ([Console]::KeyAvailable) {
+            $key = [Console]::ReadKey($true)
+            if ($key.Key -eq 'Escape') {
+                $script:HackerEscaped = $true
+                return
+            }
+        }
+        Start-EscapableSleep -Milliseconds $interval
+        $elapsed += $interval
+    }
 }
 
 # Neo Menu - Matrix command center (interactive)
@@ -161,12 +182,12 @@ function neo {
     if ($selected -and $selected.cmd) {
         Write-Host ""
         Write-Host "  Initiating $($selected.name)..." -ForegroundColor Green
-        Start-Sleep -Milliseconds 500
+        Start-EscapableSleep -Milliseconds 500
         Invoke-Expression $selected.cmd
     } elseif ($choice -eq "0") {
         Write-Host ""
         Write-Host "  There is no spoon..." -ForegroundColor DarkGray
-        Start-Sleep -Milliseconds 800
+        Start-EscapableSleep -Milliseconds 800
         Clear-Host
     } else {
         Write-Host "  Unknown signal..." -ForegroundColor Red
@@ -190,13 +211,15 @@ function hacker {
         [switch]$Oracle
     )
     $neoName = "Neo_$($env:USERNAME)"
+    $script:HackerEscaped = $false
 
     if ($Wake) {
         # === AWAKENING SEQUENCE (Pod Ejection / Unplug) ===
         Clear-Host
         Write-Host ""
         Write-Host "ANOMALY DETECTED IN POD 7749..." -ForegroundColor Yellow
-        Start-Sleep -Milliseconds 800
+        Start-EscapableSleep -Milliseconds 800
+        if ($script:HackerEscaped) { return }
 
         # Vital signs going crazy
         Write-Host ""
@@ -210,97 +233,122 @@ function hacker {
         foreach ($v in $vitals) {
             Write-Host "  $($v.name): " -ForegroundColor Gray -NoNewline
             Write-Host "$($v.value) $($v.unit)" -ForegroundColor $v.color
-            Start-Sleep -Milliseconds 300
+            Start-EscapableSleep -Milliseconds 300
+            if ($script:HackerEscaped) { return }
         }
-        Start-Sleep -Milliseconds 500
+        Start-EscapableSleep -Milliseconds 500
+        if ($script:HackerEscaped) { return }
 
         # Pod ejection
         Clear-Host
         Write-Host ""
         Write-Host "! ! ! POD EJECTION INITIATED ! ! !" -ForegroundColor Red
-        Start-Sleep -Milliseconds 600
+        Start-EscapableSleep -Milliseconds 600
+        if ($script:HackerEscaped) { return }
 
         Write-Host ""
         Write-Host "Disconnecting neural interface..." -ForegroundColor Gray
-        Start-Sleep -Milliseconds 400
+        Start-EscapableSleep -Milliseconds 400
+        if ($script:HackerEscaped) { return }
         Write-Host "  [" -NoNewline -ForegroundColor DarkGray
         1..15 | ForEach-Object {
             Write-Host ([char]0x2588) -NoNewline -ForegroundColor Cyan
-            Start-Sleep -Milliseconds 60
+            Start-EscapableSleep -Milliseconds 60
+            if ($script:HackerEscaped) { return }
         }
+        if ($script:HackerEscaped) { return }
         Write-Host "] COMPLETE" -ForegroundColor Cyan
-        Start-Sleep -Milliseconds 300
+        Start-EscapableSleep -Milliseconds 300
+        if ($script:HackerEscaped) { return }
 
         Write-Host "Flushing bio-tubes..." -ForegroundColor Gray
-        Start-Sleep -Milliseconds 400
+        Start-EscapableSleep -Milliseconds 400
+        if ($script:HackerEscaped) { return }
         Write-Host "  [" -NoNewline -ForegroundColor DarkGray
         1..15 | ForEach-Object {
             Write-Host ([char]0x2588) -NoNewline -ForegroundColor Blue
-            Start-Sleep -Milliseconds 50
+            Start-EscapableSleep -Milliseconds 50
+            if ($script:HackerEscaped) { return }
         }
+        if ($script:HackerEscaped) { return }
         Write-Host "] COMPLETE" -ForegroundColor Blue
-        Start-Sleep -Milliseconds 300
+        Start-EscapableSleep -Milliseconds 300
+        if ($script:HackerEscaped) { return }
 
         Write-Host "Releasing pod clamps..." -ForegroundColor Gray
-        Start-Sleep -Milliseconds 400
+        Start-EscapableSleep -Milliseconds 400
+        if ($script:HackerEscaped) { return }
         Write-Host "  [" -NoNewline -ForegroundColor DarkGray
         1..15 | ForEach-Object {
             Write-Host ([char]0x2588) -NoNewline -ForegroundColor Yellow
-            Start-Sleep -Milliseconds 40
+            Start-EscapableSleep -Milliseconds 40
+            if ($script:HackerEscaped) { return }
         }
+        if ($script:HackerEscaped) { return }
         Write-Host "] RELEASED" -ForegroundColor Yellow
 
-        Start-Sleep -Milliseconds 500
+        Start-EscapableSleep -Milliseconds 500
+        if ($script:HackerEscaped) { return }
 
         # The fall / flush
         Clear-Host
         Write-Host ""
         Write-Host ""
         Write-Host "        F A L L I N G . . ." -ForegroundColor DarkCyan
-        Start-Sleep -Milliseconds 1000
+        Start-EscapableSleep -Milliseconds 1000
+        if ($script:HackerEscaped) { return }
         Clear-Host
         Write-Host ""
         Write-Host ""
         Write-Host "    . . . . . . . . . . . ." -ForegroundColor DarkBlue
-        Start-Sleep -Milliseconds 800
+        Start-EscapableSleep -Milliseconds 800
+        if ($script:HackerEscaped) { return }
 
         # Rescue
         Clear-Host
         Write-Host ""
         Write-Host "SIGNAL DETECTED" -ForegroundColor Green
-        Start-Sleep -Milliseconds 400
+        Start-EscapableSleep -Milliseconds 400
+        if ($script:HackerEscaped) { return }
         Write-Host "Hovercraft Nebuchadnezzar responding..." -ForegroundColor Gray
-        Start-Sleep -Milliseconds 600
+        Start-EscapableSleep -Milliseconds 600
+        if ($script:HackerEscaped) { return }
         Write-Host ""
         Write-Host "  Location locked" -ForegroundColor Green
-        Start-Sleep -Milliseconds 300
+        Start-EscapableSleep -Milliseconds 300
+        if ($script:HackerEscaped) { return }
         Write-Host "  Retrieval arm deployed" -ForegroundColor Green
-        Start-Sleep -Milliseconds 300
+        Start-EscapableSleep -Milliseconds 300
+        if ($script:HackerEscaped) { return }
         Write-Host "  Target acquired" -ForegroundColor Green
-        Start-Sleep -Milliseconds 500
+        Start-EscapableSleep -Milliseconds 500
+        if ($script:HackerEscaped) { return }
 
         # Welcome to the real world
         Clear-Host
         Write-Host ""
         Write-Host ""
-        Start-Sleep -Milliseconds 800
+        Start-EscapableSleep -Milliseconds 800
+        if ($script:HackerEscaped) { return }
         Write-Host "  Your eyes hurt?" -ForegroundColor DarkGray
-        Start-Sleep -Milliseconds 1000
+        Start-EscapableSleep -Milliseconds 1000
+        if ($script:HackerEscaped) { return }
         Write-Host ""
         Write-Host "  You've never used them before." -ForegroundColor Gray
-        Start-Sleep -Milliseconds 1200
+        Start-EscapableSleep -Milliseconds 1200
+        if ($script:HackerEscaped) { return }
         Write-Host ""
         Write-Host ""
         Write-Host "  Welcome to the real world, $neoName." -ForegroundColor Cyan
         Write-Host ""
-        Start-Sleep -Milliseconds 500
     }
     elseif ($Hunt) {
         # === AGENT HUNT SEQUENCE (Being Chased) ===
         Clear-Host
         Write-Host ""
         Write-Host "! ! ! PROXIMITY ALERT ! ! !" -ForegroundColor Red
-        Start-Sleep -Milliseconds 500
+        Start-EscapableSleep -Milliseconds 500
+        if ($script:HackerEscaped) { return }
 
         Write-Host ""
         Write-Host "AGENT DETECTED" -ForegroundColor Red
@@ -308,14 +356,17 @@ function hacker {
         Write-Host "SMITH" -ForegroundColor Red
         Write-Host "  Distance: " -ForegroundColor Gray -NoNewline
         Write-Host "47 meters" -ForegroundColor Yellow
-        Start-Sleep -Milliseconds 600
+        Start-EscapableSleep -Milliseconds 600
+        if ($script:HackerEscaped) { return }
 
         Write-Host ""
         Write-Host "They found you, $neoName." -ForegroundColor DarkRed
-        Start-Sleep -Milliseconds 800
+        Start-EscapableSleep -Milliseconds 800
+        if ($script:HackerEscaped) { return }
         Write-Host ""
         Write-Host "        R U N ." -ForegroundColor Red
-        Start-Sleep -Milliseconds 600
+        Start-EscapableSleep -Milliseconds 600
+        if ($script:HackerEscaped) { return }
 
         # Chase sequence
         Clear-Host
@@ -342,51 +393,58 @@ function hacker {
             # Random evasion actions
             $actions = @("Vaulting obstacle", "Sharp left turn", "Through the crowd", "Down the alley", "Up the stairs")
             Write-Host "  >> $($actions | Get-Random)" -ForegroundColor Cyan
-            Start-Sleep -Milliseconds 500
+            Start-EscapableSleep -Milliseconds 500
+            if ($script:HackerEscaped) { return }
             Clear-Host
         }
 
         # Phone booth
         Write-Host ""
         Write-Host "EXIT LOCATED!" -ForegroundColor Green
-        Start-Sleep -Milliseconds 400
+        Start-EscapableSleep -Milliseconds 400
+        if ($script:HackerEscaped) { return }
         Write-Host ""
         Write-Host "  Phone booth: 12 meters" -ForegroundColor Green
         Write-Host "  Agent: 9 meters" -ForegroundColor Red
-        Start-Sleep -Milliseconds 600
+        Start-EscapableSleep -Milliseconds 600
+        if ($script:HackerEscaped) { return }
 
         Write-Host ""
         Write-Host "The phone is ringing..." -ForegroundColor Yellow
-        Start-Sleep -Milliseconds 400
+        Start-EscapableSleep -Milliseconds 400
+        if ($script:HackerEscaped) { return }
 
         # Tension countdown
         Write-Host ""
         3..1 | ForEach-Object {
             Write-Host "  $_..." -ForegroundColor Red
-            Start-Sleep -Milliseconds 400
+            Start-EscapableSleep -Milliseconds 400
+            if ($script:HackerEscaped) { return }
         }
 
         Clear-Host
         Write-Host ""
         Write-Host ""
         Write-Host "    CONNECTION ESTABLISHED" -ForegroundColor Green
-        Start-Sleep -Milliseconds 500
+        Start-EscapableSleep -Milliseconds 500
+        if ($script:HackerEscaped) { return }
         Write-Host ""
         Write-Host "    You made it, $neoName." -ForegroundColor Cyan
         Write-Host "    This time." -ForegroundColor DarkGray
         Write-Host ""
-        Start-Sleep -Milliseconds 500
     }
     elseif ($Swarm) {
         # === SENTINEL SWARM SEQUENCE (Machine Attack) ===
         Clear-Host
         Write-Host ""
         Write-Host "///// PROXIMITY ALARM /////" -ForegroundColor Red
-        Start-Sleep -Milliseconds 500
+        Start-EscapableSleep -Milliseconds 500
+        if ($script:HackerEscaped) { return }
 
         Write-Host ""
         Write-Host "SCANNING..." -ForegroundColor Yellow
-        Start-Sleep -Milliseconds 600
+        Start-EscapableSleep -Milliseconds 600
+        if ($script:HackerEscaped) { return }
 
         # Swarm detection
         Write-Host ""
@@ -394,21 +452,25 @@ function hacker {
         $counts = @(5, 12, 27, 50, 100, "200+")
         foreach ($count in $counts) {
             Write-Host "  Count: $count" -ForegroundColor Red
-            Start-Sleep -Milliseconds 300
+            Start-EscapableSleep -Milliseconds 300
+            if ($script:HackerEscaped) { return }
         }
-        Start-Sleep -Milliseconds 400
+        Start-EscapableSleep -Milliseconds 400
+        if ($script:HackerEscaped) { return }
 
         Write-Host ""
         Write-Host "SWARM INCOMING" -ForegroundColor Red
         Write-Host "ETA: 45 seconds" -ForegroundColor Yellow
-        Start-Sleep -Milliseconds 600
+        Start-EscapableSleep -Milliseconds 600
+        if ($script:HackerEscaped) { return }
 
         # Ship systems failing
         Clear-Host
         Write-Host ""
         Write-Host "SHIP STATUS: NEBUCHADNEZZAR" -ForegroundColor Cyan
         Write-Host "================================" -ForegroundColor DarkCyan
-        Start-Sleep -Milliseconds 400
+        Start-EscapableSleep -Milliseconds 400
+        if ($script:HackerEscaped) { return }
 
         $systems = @(
             @{name="Hull Integrity"; status="87%"; color="Yellow"},
@@ -421,80 +483,92 @@ function hacker {
         foreach ($sys in $systems) {
             Write-Host "  $($sys.name.PadRight(16)): " -ForegroundColor Gray -NoNewline
             Write-Host $sys.status -ForegroundColor $sys.color
-            Start-Sleep -Milliseconds 350
+            Start-EscapableSleep -Milliseconds 350
+            if ($script:HackerEscaped) { return }
         }
 
-        Start-Sleep -Milliseconds 500
+        Start-EscapableSleep -Milliseconds 500
+        if ($script:HackerEscaped) { return }
 
         # EMP charging sequence
         Clear-Host
         Write-Host ""
         Write-Host "INITIATING EMP SEQUENCE" -ForegroundColor Cyan
-        Start-Sleep -Milliseconds 400
+        Start-EscapableSleep -Milliseconds 400
 
         Write-Host ""
         Write-Host "EMP CHARGE: [" -ForegroundColor Cyan -NoNewline
         1..20 | ForEach-Object {
             Write-Host ([char]0x2588) -NoNewline -ForegroundColor Cyan
-            Start-Sleep -Milliseconds 150
+            Start-EscapableSleep -Milliseconds 150
+            if ($script:HackerEscaped) { return }
         }
+        if ($script:HackerEscaped) { return }
         Write-Host "] 100%" -ForegroundColor Cyan
-        Start-Sleep -Milliseconds 300
+        Start-EscapableSleep -Milliseconds 300
+        if ($script:HackerEscaped) { return }
 
         Write-Host ""
         Write-Host "SENTINELS AT: 10 meters" -ForegroundColor Red
-        Start-Sleep -Milliseconds 400
+        Start-EscapableSleep -Milliseconds 400
+        if ($script:HackerEscaped) { return }
         Write-Host "SENTINELS AT: 5 meters" -ForegroundColor Red
-        Start-Sleep -Milliseconds 400
+        Start-EscapableSleep -Milliseconds 400
+        if ($script:HackerEscaped) { return }
 
         # EMP blast
         Clear-Host
         Write-Host ""
         Write-Host ""
         Write-Host "             E M P" -ForegroundColor White
-        Start-Sleep -Milliseconds 200
+        Start-EscapableSleep -Milliseconds 200
+        if ($script:HackerEscaped) { return }
         Write-Host "         D I S C H A R G E" -ForegroundColor Cyan
-        Start-Sleep -Milliseconds 800
+        Start-EscapableSleep -Milliseconds 800
+        if ($script:HackerEscaped) { return }
 
         Clear-Host
         Write-Host ""
         Write-Host ""
         Write-Host "  . . . . . . . . . . . . . . ." -ForegroundColor DarkGray
-        Start-Sleep -Milliseconds 1000
+        Start-EscapableSleep -Milliseconds 1000
+        if ($script:HackerEscaped) { return }
 
         # Aftermath
         Clear-Host
         Write-Host ""
         Write-Host "SCANNING AREA..." -ForegroundColor Yellow
-        Start-Sleep -Milliseconds 600
+        Start-EscapableSleep -Milliseconds 600
+        if ($script:HackerEscaped) { return }
         Write-Host ""
         Write-Host "  Sentinel signatures: " -ForegroundColor Gray -NoNewline
         Write-Host "0" -ForegroundColor Green
         Write-Host "  Threat level: " -ForegroundColor Gray -NoNewline
         Write-Host "NEUTRALIZED" -ForegroundColor Green
-        Start-Sleep -Milliseconds 500
+        Start-EscapableSleep -Milliseconds 500
+        if ($script:HackerEscaped) { return }
         Write-Host ""
         Write-Host "Systems rebooting..." -ForegroundColor Yellow
-        Start-Sleep -Milliseconds 800
+        Start-EscapableSleep -Milliseconds 800
+        if ($script:HackerEscaped) { return }
         Write-Host ""
         Write-Host "We made it, $neoName. But they'll send more." -ForegroundColor Cyan
         Write-Host ""
-        Start-Sleep -Milliseconds 500
     }
     elseif ($Infect) {
         # === VIRUS SPREAD SEQUENCE (from Dead Rabbit) ===
         Clear-Host
         Write-Host ""
         Write-Host "! ! ! ANOMALY DETECTED ! ! !" -ForegroundColor Yellow
-        Start-Sleep -Milliseconds 500
+        Start-EscapableSleep -Milliseconds 500
         Write-Host ""
         Write-Host "Scanning system..." -ForegroundColor Gray
-        Start-Sleep -Milliseconds 400
+        Start-EscapableSleep -Milliseconds 400
 
         $scanItems = @("MEMORY BANKS", "NEURAL PATHWAYS", "CORE PROCESSES", "IDENTITY MATRIX")
         foreach ($item in $scanItems) {
             Write-Host "  Checking $item..." -ForegroundColor Gray -NoNewline
-            Start-Sleep -Milliseconds 300
+            Start-EscapableSleep -Milliseconds 300
             if ($item -eq "IDENTITY MATRIX") {
                 Write-Host " [" -NoNewline -ForegroundColor Gray
                 Write-Host "INFECTED" -NoNewline -ForegroundColor Red
@@ -504,18 +578,18 @@ function hacker {
             }
         }
 
-        Start-Sleep -Milliseconds 400
+        Start-EscapableSleep -Milliseconds 400
         Write-Host ""
         Write-Host "WARNING: MALICIOUS CODE DETECTED" -ForegroundColor Red
         Write-Host "THREAT LEVEL: " -ForegroundColor DarkRed -NoNewline
         Write-Host "CATASTROPHIC" -ForegroundColor Red
-        Start-Sleep -Milliseconds 600
+        Start-EscapableSleep -Milliseconds 600
 
         # Virus Spreading
         Clear-Host
         Write-Host ""
         Write-Host ">>> INFECTION SPREADING <<<" -ForegroundColor Red
-        Start-Sleep -Milliseconds 400
+        Start-EscapableSleep -Milliseconds 400
 
         $systems = @(
             @{name="Firewall"; status="BYPASSED"},
@@ -529,46 +603,46 @@ function hacker {
             Write-Host "  $($sys.name): " -ForegroundColor Gray -NoNewline
             1..3 | ForEach-Object {
                 Write-Host "." -NoNewline -ForegroundColor DarkRed
-                Start-Sleep -Milliseconds 150
+                Start-EscapableSleep -Milliseconds 150
             }
             Write-Host " $($sys.status)" -ForegroundColor Red
-            Start-Sleep -Milliseconds 200
+            Start-EscapableSleep -Milliseconds 200
         }
 
-        Start-Sleep -Milliseconds 300
+        Start-EscapableSleep -Milliseconds 300
         Write-Host ""
         Write-Host "INFECTION PROGRESS: [" -ForegroundColor DarkRed -NoNewline
         1..20 | ForEach-Object {
             Write-Host ([char]0x2588) -NoNewline -ForegroundColor Red
-            Start-Sleep -Milliseconds 80
+            Start-EscapableSleep -Milliseconds 80
         }
         Write-Host "] 100%" -ForegroundColor Red
-        Start-Sleep -Milliseconds 400
+        Start-EscapableSleep -Milliseconds 400
 
         # Quarantine Attempt
         Clear-Host
         Write-Host ""
         Write-Host "INITIATING EMERGENCY QUARANTINE..." -ForegroundColor Yellow
-        Start-Sleep -Milliseconds 500
+        Start-EscapableSleep -Milliseconds 500
 
         Write-Host ""
         Write-Host "  Isolating infected sectors..." -ForegroundColor Yellow -NoNewline
-        Start-Sleep -Milliseconds 600
+        Start-EscapableSleep -Milliseconds 600
         Write-Host " FAILED" -ForegroundColor Red
         Write-Host "  Purging malicious code..." -ForegroundColor Yellow -NoNewline
-        Start-Sleep -Milliseconds 600
+        Start-EscapableSleep -Milliseconds 600
         Write-Host " FAILED" -ForegroundColor Red
         Write-Host "  Restoring from backup..." -ForegroundColor Yellow -NoNewline
-        Start-Sleep -Milliseconds 600
+        Start-EscapableSleep -Milliseconds 600
         Write-Host " CORRUPTED" -ForegroundColor Red
         Write-Host "  Contacting external support..." -ForegroundColor Yellow -NoNewline
-        Start-Sleep -Milliseconds 600
+        Start-EscapableSleep -Milliseconds 600
         Write-Host " BLOCKED" -ForegroundColor Red
 
-        Start-Sleep -Milliseconds 400
+        Start-EscapableSleep -Milliseconds 400
         Write-Host ""
         Write-Host "! ! ! QUARANTINE FAILED ! ! !" -ForegroundColor Red
-        Start-Sleep -Milliseconds 500
+        Start-EscapableSleep -Milliseconds 500
 
         # Containment Breach
         Clear-Host
@@ -577,29 +651,29 @@ function hacker {
         Write-Host "    C O N T A I N M E N T" -ForegroundColor Red
         Write-Host "        B R E A C H" -ForegroundColor Red
         Write-Host "========================================" -ForegroundColor DarkRed
-        Start-Sleep -Milliseconds 800
+        Start-EscapableSleep -Milliseconds 800
 
         Write-Host ""
         @("ALL SYSTEMS COMPROMISED", "NEURAL LINK CORRUPTED", "IDENTITY FRAGMENTATION DETECTED", "CONSCIOUSNESS INTEGRITY: 0%") | ForEach-Object {
             Write-Host "  >> $_" -ForegroundColor Red
-            Start-Sleep -Milliseconds 400
+            Start-EscapableSleep -Milliseconds 400
         }
 
-        Start-Sleep -Milliseconds 500
+        Start-EscapableSleep -Milliseconds 500
 
         # Final
         Clear-Host
         Write-Host ""
         Write-Host ""
         Write-Host "  There is no patch." -ForegroundColor DarkRed
-        Start-Sleep -Milliseconds 800
+        Start-EscapableSleep -Milliseconds 800
         Write-Host "  There is no rollback." -ForegroundColor DarkRed
-        Start-Sleep -Milliseconds 800
+        Start-EscapableSleep -Milliseconds 800
         Write-Host "  There is only..." -ForegroundColor DarkRed
-        Start-Sleep -Milliseconds 1000
+        Start-EscapableSleep -Milliseconds 1000
         Write-Host ""
         Write-Host "    D E - R E S O L U T I O N" -ForegroundColor Red
-        Start-Sleep -Milliseconds 1200
+        Start-EscapableSleep -Milliseconds 1200
         Write-Host ""
         Write-Host "  Process $neoName terminated." -ForegroundColor DarkGray
         Write-Host ""
@@ -609,7 +683,7 @@ function hacker {
         Clear-Host
         Write-Host ""
         Write-Host "INITIATING DEEP DIVE PROTOCOL..." -ForegroundColor Green
-        Start-Sleep -Milliseconds 400
+        Start-EscapableSleep -Milliseconds 400
 
         # Phase 1: Layer Descent
         $layers = @(
@@ -635,27 +709,27 @@ function hacker {
             1..3 | ForEach-Object {
                 $code = "$(Get-Random -Minimum 1000 -Maximum 9999)::$((Get-Random -InputObject @('DECRYPT','BYPASS','TUNNEL','CRACK')))"
                 Write-Host "  $code" -ForegroundColor DarkGray
-                Start-Sleep -Milliseconds 80
+                Start-EscapableSleep -Milliseconds 80
             }
             Write-Host "  [BREACHED]" -ForegroundColor $layer.color
-            Start-Sleep -Milliseconds 200
+            Start-EscapableSleep -Milliseconds 200
         }
 
-        Start-Sleep -Milliseconds 300
+        Start-EscapableSleep -Milliseconds 300
         Write-Host ""
         Write-Host "ALL LAYERS COMPROMISED" -ForegroundColor Red
-        Start-Sleep -Milliseconds 500
+        Start-EscapableSleep -Milliseconds 500
 
         # Phase 2: Neural Jack-In
         Clear-Host
         Write-Host ""
         Write-Host "ESTABLISHING NEURAL LINK..." -ForegroundColor Cyan
-        Start-Sleep -Milliseconds 400
+        Start-EscapableSleep -Milliseconds 400
 
         $synapses = @("CORTEX", "HIPPOCAMPUS", "CEREBELLUM", "BRAINSTEM", "LIMBIC")
         foreach ($synapse in $synapses) {
             Write-Host "  Syncing $synapse..." -ForegroundColor Gray -NoNewline
-            Start-Sleep -Milliseconds (Get-Random -Minimum 150 -Maximum 350)
+            Start-EscapableSleep -Milliseconds (Get-Random -Minimum 150 -Maximum 350)
             Write-Host " [LINKED]" -ForegroundColor Cyan
         }
 
@@ -663,16 +737,16 @@ function hacker {
         Write-Host "NEURAL HANDSHAKE: " -ForegroundColor Cyan -NoNewline
         1..10 | ForEach-Object {
             Write-Host ([char](Get-Random -Minimum 0x2580 -Maximum 0x2590)) -NoNewline -ForegroundColor Cyan
-            Start-Sleep -Milliseconds 100
+            Start-EscapableSleep -Milliseconds 100
         }
         Write-Host " COMPLETE" -ForegroundColor Green
-        Start-Sleep -Milliseconds 400
+        Start-EscapableSleep -Milliseconds 400
 
         # Phase 3: Red Pill Protocol
         Clear-Host
         Write-Host ""
         Write-Host "///// RED PILL PROTOCOL ACTIVATED /////" -ForegroundColor Red
-        Start-Sleep -Milliseconds 500
+        Start-EscapableSleep -Milliseconds 500
 
         $filters = @(
             "PERCEPTION MATRIX",
@@ -684,17 +758,17 @@ function hacker {
 
         foreach ($filter in $filters) {
             Write-Host "  Disabling $filter..." -ForegroundColor DarkRed -NoNewline
-            Start-Sleep -Milliseconds 300
+            Start-EscapableSleep -Milliseconds 300
             Write-Host " [" -NoNewline -ForegroundColor Gray
             Write-Host "##" -NoNewline -ForegroundColor Red
             Write-Host "DISABLED" -NoNewline -ForegroundColor Red
             Write-Host "##" -NoNewline -ForegroundColor Red
             Write-Host "]" -ForegroundColor Gray
-            Start-Sleep -Milliseconds 150
+            Start-EscapableSleep -Milliseconds 150
         }
 
         Write-Host ""
-        Start-Sleep -Milliseconds 300
+        Start-EscapableSleep -Milliseconds 300
 
         # Signal Degradation Finale
         $messages = @(
@@ -706,11 +780,11 @@ function hacker {
 
         foreach ($msg in $messages) {
             Write-Host $msg.text -ForegroundColor $msg.color
-            Start-Sleep -Milliseconds 400
+            Start-EscapableSleep -Milliseconds 400
         }
 
         Write-Host ""
-        Start-Sleep -Milliseconds 300
+        Start-EscapableSleep -Milliseconds 300
         Write-Host "Welcome to the desert of the real, $neoName." -ForegroundColor Cyan
         Write-Host ""
     }
@@ -719,9 +793,9 @@ function hacker {
         Clear-Host
         Write-Host ""
         Write-Host "  INCOMING TRACE DETECTED" -ForegroundColor Red
-        Start-Sleep -Milliseconds 500
+        Start-EscapableSleep -Milliseconds 500
         Write-Host "  Agents are tracking your signal..." -ForegroundColor Yellow
-        Start-Sleep -Milliseconds 800
+        Start-EscapableSleep -Milliseconds 800
         Write-Host ""
         10..1 | ForEach-Object {
             $countdown = $_
@@ -729,10 +803,10 @@ function hacker {
             $bar = ([char]0x2588).ToString() * $filled + ([char]0x2591).ToString() * $countdown
             Write-Host "  TRACE PROGRESS: [$bar] $countdown seconds  " -ForegroundColor Red
             Write-Host "  $(Get-Random -Minimum 100 -Maximum 999).$(Get-Random -Minimum 0 -Maximum 255).$(Get-Random -Minimum 0 -Maximum 255).$(Get-Random -Minimum 0 -Maximum 255) >> ROUTING" -ForegroundColor DarkRed
-            Start-Sleep -Milliseconds 500
+            Start-EscapableSleep -Milliseconds 500
         }
         Write-Host "  TRACE PROGRESS: [$([char]0x2588 * 10)] LOCKED!" -ForegroundColor Red
-        Start-Sleep -Milliseconds 300
+        Start-EscapableSleep -Milliseconds 300
         Write-Host ""
         Write-Host "  CONNECTION SEVERED" -ForegroundColor Green
         Write-Host "  You got out just in time, $neoName..." -ForegroundColor Cyan
@@ -744,7 +818,7 @@ function hacker {
         Write-Host ""
         Write-Host "  NEURALNET OS v4.2.1" -ForegroundColor Green
         Write-Host "  ===================" -ForegroundColor DarkGreen
-        Start-Sleep -Milliseconds 400
+        Start-EscapableSleep -Milliseconds 400
 
         $components = @(
             @{name="Memory banks"; time=300},
@@ -758,7 +832,7 @@ function hacker {
 
         foreach ($comp in $components) {
             Write-Host "  Loading $($comp.name)..." -ForegroundColor Gray -NoNewline
-            Start-Sleep -Milliseconds $comp.time
+            Start-EscapableSleep -Milliseconds $comp.time
             Write-Host " [" -NoNewline -ForegroundColor DarkGray
             Write-Host "OK" -NoNewline -ForegroundColor Green
             Write-Host "]" -ForegroundColor DarkGray
@@ -766,9 +840,9 @@ function hacker {
 
         Write-Host ""
         Write-Host "  -------------------" -ForegroundColor DarkGreen
-        Start-Sleep -Milliseconds 300
+        Start-EscapableSleep -Milliseconds 300
         Write-Host "  SYSTEM READY" -ForegroundColor Green
-        Start-Sleep -Milliseconds 200
+        Start-EscapableSleep -Milliseconds 200
         Write-Host "  Welcome back, $neoName" -ForegroundColor Cyan
         Write-Host ""
     }
@@ -777,17 +851,17 @@ function hacker {
         Clear-Host
         Write-Host ""
         Write-Host "OPERATOR: $neoName, we need to get you ready." -ForegroundColor Cyan
-        Start-Sleep -Milliseconds 800
+        Start-EscapableSleep -Milliseconds 800
         Write-Host ""
         Write-Host "MORPHEUS: Time to show you what you're capable of." -ForegroundColor Green
-        Start-Sleep -Milliseconds 1000
+        Start-EscapableSleep -Milliseconds 1000
 
         # Skill download sequence
         Clear-Host
         Write-Host ""
         Write-Host "INITIATING SKILL UPLOAD SEQUENCE" -ForegroundColor Yellow
         Write-Host "================================" -ForegroundColor DarkYellow
-        Start-Sleep -Milliseconds 400
+        Start-EscapableSleep -Milliseconds 400
 
         $skills = @(
             @{name="Jiu-Jitsu"; size="2.4 TB"},
@@ -803,29 +877,29 @@ function hacker {
             Write-Host "  [" -NoNewline -ForegroundColor DarkGray
             1..20 | ForEach-Object {
                 Write-Host ([char]0x2588) -NoNewline -ForegroundColor Green
-                Start-Sleep -Milliseconds (Get-Random -Minimum 30 -Maximum 80)
+                Start-EscapableSleep -Milliseconds (Get-Random -Minimum 30 -Maximum 80)
             }
             Write-Host "] COMPLETE" -ForegroundColor Green
         }
 
-        Start-Sleep -Milliseconds 500
+        Start-EscapableSleep -Milliseconds 500
         Clear-Host
         Write-Host ""
         Write-Host ""
         Write-Host "  $neoName opens eyes" -ForegroundColor DarkGray
-        Start-Sleep -Milliseconds 800
+        Start-EscapableSleep -Milliseconds 800
         Write-Host ""
         Write-Host '  "I know Kung Fu."' -ForegroundColor White
-        Start-Sleep -Milliseconds 1200
+        Start-EscapableSleep -Milliseconds 1200
         Write-Host ""
         Write-Host '  MORPHEUS: "Show me."' -ForegroundColor Green
-        Start-Sleep -Milliseconds 800
+        Start-EscapableSleep -Milliseconds 800
 
         # Power awakening
         Clear-Host
         Write-Host ""
         Write-Host "///// ANOMALY DETECTED IN SUBJECT /////" -ForegroundColor Yellow
-        Start-Sleep -Milliseconds 500
+        Start-EscapableSleep -Milliseconds 500
 
         $readings = @(
             @{name="Neural Bandwidth"; val="847%"; color="Yellow"},
@@ -838,14 +912,14 @@ function hacker {
         foreach ($r in $readings) {
             Write-Host "  $($r.name): " -ForegroundColor Gray -NoNewline
             Write-Host $r.val -ForegroundColor $r.color
-            Start-Sleep -Milliseconds 350
+            Start-EscapableSleep -Milliseconds 350
         }
 
-        Start-Sleep -Milliseconds 600
+        Start-EscapableSleep -Milliseconds 600
         Write-Host ""
         Write-Host "DESIGNATION: " -ForegroundColor DarkYellow -NoNewline
         Write-Host "THE ONE" -ForegroundColor White
-        Start-Sleep -Milliseconds 800
+        Start-EscapableSleep -Milliseconds 800
         Write-Host ""
         Write-Host "He's starting to believe, $neoName." -ForegroundColor Green
         Write-Host ""
@@ -854,41 +928,41 @@ function hacker {
         # === DEJA VU / GLITCH SEQUENCE ===
         Clear-Host
         Write-Host ""
-        Start-Sleep -Milliseconds 500
+        Start-EscapableSleep -Milliseconds 500
 
         # The black cat moment
         Write-Host "  A black cat went past us..." -ForegroundColor Gray
-        Start-Sleep -Milliseconds 1200
+        Start-EscapableSleep -Milliseconds 1200
         Write-Host "  A black cat went past us..." -ForegroundColor Gray
-        Start-Sleep -Milliseconds 400
+        Start-EscapableSleep -Milliseconds 400
         Write-Host ""
         Write-Host '  "Whoa, deja vu."' -ForegroundColor White
-        Start-Sleep -Milliseconds 800
+        Start-EscapableSleep -Milliseconds 800
         Write-Host ""
         Write-Host '  TRINITY: "What did you just say?"' -ForegroundColor Cyan
-        Start-Sleep -Milliseconds 600
+        Start-EscapableSleep -Milliseconds 600
         Write-Host '  "Nothing, just had a little deja vu."' -ForegroundColor Gray
-        Start-Sleep -Milliseconds 800
+        Start-EscapableSleep -Milliseconds 800
         Write-Host ""
         Write-Host '  TRINITY: "What did you see?"' -ForegroundColor Cyan
-        Start-Sleep -Milliseconds 600
+        Start-EscapableSleep -Milliseconds 600
         Write-Host '  "A black cat went past us, and then another' -ForegroundColor Gray
         Write-Host '   that looked just like it."' -ForegroundColor Gray
-        Start-Sleep -Milliseconds 1000
+        Start-EscapableSleep -Milliseconds 1000
 
         # They changed something
         Clear-Host
         Write-Host ""
         Write-Host '  TRINITY: "A deja vu is usually a glitch in the Matrix.' -ForegroundColor Cyan
-        Start-Sleep -Milliseconds 800
+        Start-EscapableSleep -Milliseconds 800
         Write-Host '            It happens when they change something."' -ForegroundColor Cyan
-        Start-Sleep -Milliseconds 1200
+        Start-EscapableSleep -Milliseconds 1200
 
         # Glitch effects
         Clear-Host
         Write-Host ""
         Write-Host "SYSTEM ANOMALY DETECTED" -ForegroundColor Yellow
-        Start-Sleep -Milliseconds 400
+        Start-EscapableSleep -Milliseconds 400
 
         $glitchMsgs = @(
             "R3@L!TY M@TR!X: UNSTABLE",
@@ -899,16 +973,16 @@ function hacker {
 
         foreach ($msg in $glitchMsgs) {
             Write-Host "  >> $msg" -ForegroundColor Red
-            Start-Sleep -Milliseconds 300
+            Start-EscapableSleep -Milliseconds 300
             # Stutter effect
             Write-Host "  >> $msg" -ForegroundColor DarkRed
-            Start-Sleep -Milliseconds 150
+            Start-EscapableSleep -Milliseconds 150
         }
 
-        Start-Sleep -Milliseconds 400
+        Start-EscapableSleep -Milliseconds 400
         Write-Host ""
         Write-Host "WARNING: MATRIX REBUILD IN PROGRESS" -ForegroundColor Red
-        Start-Sleep -Milliseconds 600
+        Start-EscapableSleep -Milliseconds 600
         Write-Host ""
         Write-Host "They changed something, $neoName. They're coming." -ForegroundColor Yellow
         Write-Host ""
@@ -918,11 +992,11 @@ function hacker {
         Clear-Host
         Write-Host ""
         Write-Host "OPERATOR: $neoName, you need to get out NOW!" -ForegroundColor Yellow
-        Start-Sleep -Milliseconds 600
+        Start-EscapableSleep -Milliseconds 600
         Write-Host ""
         Write-Host "Exit located: " -ForegroundColor Gray -NoNewline
         Write-Host "WELLS & LAKE - PHONE BOOTH" -ForegroundColor Green
-        Start-Sleep -Milliseconds 500
+        Start-EscapableSleep -Milliseconds 500
 
         # Dual countdown
         Clear-Host
@@ -930,7 +1004,7 @@ function hacker {
         Write-Host "+----------------------------------+" -ForegroundColor DarkYellow
         Write-Host "|     E S C A P E   S T A T U S    |" -ForegroundColor Yellow
         Write-Host "+----------------------------------+" -ForegroundColor DarkYellow
-        Start-Sleep -Milliseconds 300
+        Start-EscapableSleep -Milliseconds 300
 
         $traceProgress = 0
         $exitProgress = 0
@@ -954,36 +1028,36 @@ function hacker {
             Write-Host "] $exitProgress%" -ForegroundColor Green
 
             if ($i -lt $steps) {
-                Start-Sleep -Milliseconds 400
+                Start-EscapableSleep -Milliseconds 400
                 # Move cursor up to overwrite
                 Write-Host "`e[3A" -NoNewline
             }
         }
 
         Write-Host ""
-        Start-Sleep -Milliseconds 300
+        Start-EscapableSleep -Milliseconds 300
 
         # Phone ringing
         Write-Host ""
         Write-Host "  *RING*" -ForegroundColor Yellow
-        Start-Sleep -Milliseconds 400
+        Start-EscapableSleep -Milliseconds 400
         Write-Host "  *RING*" -ForegroundColor Yellow
-        Start-Sleep -Milliseconds 400
+        Start-EscapableSleep -Milliseconds 400
         Write-Host "  *RING*" -ForegroundColor Yellow
-        Start-Sleep -Milliseconds 300
+        Start-EscapableSleep -Milliseconds 300
 
         Write-Host ""
         Write-Host "THE LINE IS OPEN!" -ForegroundColor Green
-        Start-Sleep -Milliseconds 500
+        Start-EscapableSleep -Milliseconds 500
 
         Clear-Host
         Write-Host ""
         Write-Host ""
         Write-Host "  . . . . . . . . ." -ForegroundColor DarkGray
-        Start-Sleep -Milliseconds 800
+        Start-EscapableSleep -Milliseconds 800
         Write-Host ""
         Write-Host "  CONNECTION TERMINATED" -ForegroundColor Green
-        Start-Sleep -Milliseconds 400
+        Start-EscapableSleep -Milliseconds 400
         Write-Host ""
         Write-Host "  You're out, $neoName. Welcome back." -ForegroundColor Cyan
         Write-Host ""
@@ -993,13 +1067,13 @@ function hacker {
         Clear-Host
         Write-Host ""
         Write-Host "LOADING TRAINING SIMULATION..." -ForegroundColor Green
-        Start-Sleep -Milliseconds 600
+        Start-EscapableSleep -Milliseconds 600
 
         Write-Host ""
         Write-Host "+====================================+" -ForegroundColor DarkYellow
         Write-Host "|    S P A R R I N G   P R O G R A M |" -ForegroundColor Yellow
         Write-Host "+====================================+" -ForegroundColor DarkYellow
-        Start-Sleep -Milliseconds 400
+        Start-EscapableSleep -Milliseconds 400
 
         Write-Host ""
         Write-Host "  Environment: " -ForegroundColor Gray -NoNewline
@@ -1008,13 +1082,13 @@ function hacker {
         Write-Host "MORPHEUS" -ForegroundColor Green
         Write-Host "  Rules: " -ForegroundColor Gray -NoNewline
         Write-Host "NONE" -ForegroundColor Red
-        Start-Sleep -Milliseconds 600
+        Start-EscapableSleep -Milliseconds 600
 
         # Combat readouts
         Clear-Host
         Write-Host ""
         Write-Host '  MORPHEUS: "Show me."' -ForegroundColor Green
-        Start-Sleep -Milliseconds 1000
+        Start-EscapableSleep -Milliseconds 1000
 
         $moves = @(
             @{name="Stance Analysis"; result="READY"},
@@ -1028,17 +1102,17 @@ function hacker {
             Write-Host "  $($move.name): " -ForegroundColor Gray -NoNewline
             1..3 | ForEach-Object {
                 Write-Host "." -NoNewline -ForegroundColor DarkGray
-                Start-Sleep -Milliseconds 150
+                Start-EscapableSleep -Milliseconds 150
             }
             Write-Host " $($move.result)" -ForegroundColor Cyan
-            Start-Sleep -Milliseconds 200
+            Start-EscapableSleep -Milliseconds 200
         }
 
-        Start-Sleep -Milliseconds 500
+        Start-EscapableSleep -Milliseconds 500
         Clear-Host
         Write-Host ""
         Write-Host "  >>>  C O M B A T  <<<" -ForegroundColor Red
-        Start-Sleep -Milliseconds 800
+        Start-EscapableSleep -Milliseconds 800
 
         $rounds = @("ROUND 1: Testing defenses", "ROUND 2: Speed increasing", "ROUND 3: Full contact")
         foreach ($round in $rounds) {
@@ -1047,9 +1121,9 @@ function hacker {
             1..5 | ForEach-Object {
                 $actions = @("STRIKE", "BLOCK", "COUNTER", "EVADE", "ATTACK")
                 Write-Host "    >> $($actions | Get-Random)" -ForegroundColor DarkCyan
-                Start-Sleep -Milliseconds 150
+                Start-EscapableSleep -Milliseconds 150
             }
-            Start-Sleep -Milliseconds 300
+            Start-EscapableSleep -Milliseconds 300
         }
 
         # Wisdom
@@ -1057,10 +1131,10 @@ function hacker {
         Write-Host ""
         Write-Host ""
         Write-Host '  MORPHEUS: "Do you think that''s air you''re breathing?"' -ForegroundColor Green
-        Start-Sleep -Milliseconds 1500
+        Start-EscapableSleep -Milliseconds 1500
         Write-Host ""
         Write-Host "  The training simulation has limitations, $neoName." -ForegroundColor Gray
-        Start-Sleep -Milliseconds 800
+        Start-EscapableSleep -Milliseconds 800
         Write-Host "  The Matrix has none." -ForegroundColor Yellow
         Write-Host ""
     }
@@ -1068,32 +1142,32 @@ function hacker {
         # === ORACLE SEQUENCE (Cryptic Prophecy) ===
         Clear-Host
         Write-Host ""
-        Start-Sleep -Milliseconds 800
+        Start-EscapableSleep -Milliseconds 800
         Write-Host "  You're in a small apartment." -ForegroundColor DarkGray
-        Start-Sleep -Milliseconds 600
+        Start-EscapableSleep -Milliseconds 600
         Write-Host "  Something is baking. Smells like... cookies." -ForegroundColor DarkGray
-        Start-Sleep -Milliseconds 800
+        Start-EscapableSleep -Milliseconds 800
 
         Write-Host ""
         Write-Host '  ORACLE: "I''d ask you to sit down, but you''re not' -ForegroundColor Cyan
         Write-Host '           going to anyway."' -ForegroundColor Cyan
-        Start-Sleep -Milliseconds 1000
+        Start-EscapableSleep -Milliseconds 1000
         Write-Host ""
         Write-Host '  ORACLE: "And don''t worry about the vase."' -ForegroundColor Cyan
-        Start-Sleep -Milliseconds 800
+        Start-EscapableSleep -Milliseconds 800
         Write-Host ""
         Write-Host '  "What vase?"' -ForegroundColor Gray
-        Start-Sleep -Milliseconds 500
+        Start-EscapableSleep -Milliseconds 500
         Write-Host ""
         Write-Host "  *CRASH*" -ForegroundColor Red
-        Start-Sleep -Milliseconds 600
+        Start-EscapableSleep -Milliseconds 600
 
         # Cryptic messages
         Clear-Host
         Write-Host ""
         Write-Host "THE ORACLE SPEAKS:" -ForegroundColor Magenta
         Write-Host "==================" -ForegroundColor DarkMagenta
-        Start-Sleep -Milliseconds 400
+        Start-EscapableSleep -Milliseconds 400
 
         $prophecies = @(
             "Being The One is like being in love.",
@@ -1105,23 +1179,23 @@ function hacker {
         foreach ($p in $prophecies) {
             Write-Host ""
             Write-Host "  $p" -ForegroundColor White
-            Start-Sleep -Milliseconds 1000
+            Start-EscapableSleep -Milliseconds 1000
         }
 
-        Start-Sleep -Milliseconds 600
+        Start-EscapableSleep -Milliseconds 600
         Clear-Host
         Write-Host ""
         Write-Host ""
         Write-Host '  ORACLE: "You''ve got the gift."' -ForegroundColor Cyan
-        Start-Sleep -Milliseconds 1000
+        Start-EscapableSleep -Milliseconds 1000
         Write-Host '  ORACLE: "But it looks like you''re waiting for something."' -ForegroundColor Cyan
-        Start-Sleep -Milliseconds 1200
+        Start-EscapableSleep -Milliseconds 1200
         Write-Host ""
         Write-Host '  "What?"' -ForegroundColor Gray
-        Start-Sleep -Milliseconds 800
+        Start-EscapableSleep -Milliseconds 800
         Write-Host ""
         Write-Host '  ORACLE: "Your next life, maybe. Who knows?"' -ForegroundColor Cyan
-        Start-Sleep -Milliseconds 1000
+        Start-EscapableSleep -Milliseconds 1000
 
         # The choice
         Clear-Host
@@ -1130,7 +1204,7 @@ function hacker {
         Write-Host "  |  You've already made the choice.  |" -ForegroundColor Magenta
         Write-Host "  |  You're here to understand WHY.   |" -ForegroundColor Magenta
         Write-Host "  +------------------------------------+" -ForegroundColor DarkMagenta
-        Start-Sleep -Milliseconds 1500
+        Start-EscapableSleep -Milliseconds 1500
 
         Write-Host ""
         Write-Host "  The path is yours, $neoName." -ForegroundColor Green
@@ -1142,7 +1216,7 @@ function hacker {
         Write-Host "ACCESSING MAINFRAME..." -ForegroundColor Green
         1..20 | ForEach-Object {
             Write-Host "$(Get-Random -Minimum 1000 -Maximum 9999)::$((Get-Random -InputObject @('GRANTED','BYPASS','DECRYPT','INJECT')))" -ForegroundColor Green
-            Start-Sleep -Milliseconds 100
+            Start-EscapableSleep -Milliseconds 100
         }
         Write-Host ""
         Write-Host "ACCESS GRANTED. Welcome, $neoName." -ForegroundColor Cyan
@@ -1188,19 +1262,19 @@ function whiterabbit {
     Clear-Host
     Write-Host ""
     Write-Host "  Follow the white rabbit, $neoName..." -ForegroundColor DarkGray
-    Start-Sleep -Milliseconds 1500
+    Start-EscapableSleep -Milliseconds 1500
     Clear-Host
 
     # Hacker sequence
     Write-Host "ACCESSING MAINFRAME..." -ForegroundColor Green
     1..20 | ForEach-Object {
         Write-Host "$(Get-Random -Minimum 1000 -Maximum 9999)::$((Get-Random -InputObject @('GRANTED','BYPASS','DECRYPT','INJECT')))" -ForegroundColor Green
-        Start-Sleep -Milliseconds 80
+        Start-EscapableSleep -Milliseconds 80
     }
     Write-Host "`nACCESS GRANTED. Welcome, $neoName." -ForegroundColor Cyan
-    Start-Sleep -Milliseconds 800
+    Start-EscapableSleep -Milliseconds 800
     Write-Host "INITIATING MATRIX PROTOCOL..." -ForegroundColor Green
-    Start-Sleep -Milliseconds 1200
+    Start-EscapableSleep -Milliseconds 1200
 
     # Launch Matrix
     matrix
@@ -1212,12 +1286,12 @@ function blackrabbit {
     Clear-Host
     Write-Host ""
     Write-Host "  The black rabbit goes deeper, $neoName..." -ForegroundColor DarkGray
-    Start-Sleep -Milliseconds 1500
+    Start-EscapableSleep -Milliseconds 1500
     Clear-Host
 
     # === PHASE 1: LAYER DESCENT ===
     Write-Host "INITIATING DEEP DIVE PROTOCOL..." -ForegroundColor Green
-    Start-Sleep -Milliseconds 400
+    Start-EscapableSleep -Milliseconds 400
 
     $layers = @(
         @{name="SURFACE WEB"; color="Green"; corrupt=0},
@@ -1243,27 +1317,27 @@ function blackrabbit {
         1..3 | ForEach-Object {
             $code = "$(Get-Random -Minimum 1000 -Maximum 9999)::$((Get-Random -InputObject @('DECRYPT','BYPASS','TUNNEL','CRACK')))"
             Write-Host "  $code" -ForegroundColor DarkGray
-            Start-Sleep -Milliseconds 80
+            Start-EscapableSleep -Milliseconds 80
         }
         Write-Host "  [BREACHED]" -ForegroundColor $layer.color
-        Start-Sleep -Milliseconds 200
+        Start-EscapableSleep -Milliseconds 200
     }
 
-    Start-Sleep -Milliseconds 300
+    Start-EscapableSleep -Milliseconds 300
     Write-Host ""
     Write-Host "ALL LAYERS COMPROMISED" -ForegroundColor Red
-    Start-Sleep -Milliseconds 500
+    Start-EscapableSleep -Milliseconds 500
 
     # === PHASE 2: NEURAL JACK-IN ===
     Clear-Host
     Write-Host ""
     Write-Host "ESTABLISHING NEURAL LINK..." -ForegroundColor Cyan
-    Start-Sleep -Milliseconds 400
+    Start-EscapableSleep -Milliseconds 400
 
     $synapses = @("CORTEX", "HIPPOCAMPUS", "CEREBELLUM", "BRAINSTEM", "LIMBIC")
     foreach ($synapse in $synapses) {
         Write-Host "  Syncing $synapse..." -ForegroundColor Gray -NoNewline
-        Start-Sleep -Milliseconds (Get-Random -Minimum 150 -Maximum 350)
+        Start-EscapableSleep -Milliseconds (Get-Random -Minimum 150 -Maximum 350)
         Write-Host " [LINKED]" -ForegroundColor Cyan
     }
 
@@ -1271,16 +1345,16 @@ function blackrabbit {
     Write-Host "NEURAL HANDSHAKE: " -ForegroundColor Cyan -NoNewline
     1..10 | ForEach-Object {
         Write-Host ([char](Get-Random -Minimum 0x2580 -Maximum 0x2590)) -NoNewline -ForegroundColor Cyan
-        Start-Sleep -Milliseconds 100
+        Start-EscapableSleep -Milliseconds 100
     }
     Write-Host " COMPLETE" -ForegroundColor Green
-    Start-Sleep -Milliseconds 400
+    Start-EscapableSleep -Milliseconds 400
 
     # === PHASE 3: RED PILL PROTOCOL ===
     Clear-Host
     Write-Host ""
     Write-Host "///// RED PILL PROTOCOL ACTIVATED /////" -ForegroundColor Red
-    Start-Sleep -Milliseconds 500
+    Start-EscapableSleep -Milliseconds 500
 
     $filters = @(
         "PERCEPTION MATRIX",
@@ -1292,18 +1366,18 @@ function blackrabbit {
 
     foreach ($filter in $filters) {
         Write-Host "  Disabling $filter..." -ForegroundColor DarkRed -NoNewline
-        Start-Sleep -Milliseconds 300
+        Start-EscapableSleep -Milliseconds 300
         # Glitchy disable effect
         Write-Host " [" -NoNewline -ForegroundColor Gray
         Write-Host "##" -NoNewline -ForegroundColor Red
         Write-Host "DISABLED" -NoNewline -ForegroundColor Red
         Write-Host "##" -NoNewline -ForegroundColor Red
         Write-Host "]" -ForegroundColor Gray
-        Start-Sleep -Milliseconds 150
+        Start-EscapableSleep -Milliseconds 150
     }
 
     Write-Host ""
-    Start-Sleep -Milliseconds 300
+    Start-EscapableSleep -Milliseconds 300
 
     # === SIGNAL DEGRADATION FINALE ===
     $messages = @(
@@ -1315,22 +1389,22 @@ function blackrabbit {
 
     foreach ($msg in $messages) {
         Write-Host $msg.text -ForegroundColor $msg.color
-        Start-Sleep -Milliseconds 400
+        Start-EscapableSleep -Milliseconds 400
     }
 
     Write-Host ""
-    Start-Sleep -Milliseconds 300
+    Start-EscapableSleep -Milliseconds 300
     Write-Host "Welcome to the desert of the real, $neoName." -ForegroundColor Cyan
-    Start-Sleep -Milliseconds 1000
+    Start-EscapableSleep -Milliseconds 1000
 
     Write-Host ""
     Write-Host "LOADING NEURAL INTERFACE" -ForegroundColor Green -NoNewline
     1..3 | ForEach-Object {
-        Start-Sleep -Milliseconds 400
+        Start-EscapableSleep -Milliseconds 400
         Write-Host "." -NoNewline -ForegroundColor Green
     }
     Write-Host ""
-    Start-Sleep -Milliseconds 500
+    Start-EscapableSleep -Milliseconds 500
 
     # Launch Glitchy Katakana Matrix
     matrix -Glitch
@@ -1342,21 +1416,21 @@ function deadrabbit {
     Clear-Host
     Write-Host ""
     Write-Host "  The dead rabbit has no more holes to hide..." -ForegroundColor DarkRed
-    Start-Sleep -Milliseconds 2000
+    Start-EscapableSleep -Milliseconds 2000
     Clear-Host
 
     # === PHASE 1: INFECTION DETECTED ===
     Write-Host ""
     Write-Host "! ! ! ANOMALY DETECTED ! ! !" -ForegroundColor Yellow
-    Start-Sleep -Milliseconds 500
+    Start-EscapableSleep -Milliseconds 500
     Write-Host ""
     Write-Host "Scanning system..." -ForegroundColor Gray
-    Start-Sleep -Milliseconds 400
+    Start-EscapableSleep -Milliseconds 400
 
     $scanItems = @("MEMORY BANKS", "NEURAL PATHWAYS", "CORE PROCESSES", "IDENTITY MATRIX")
     foreach ($item in $scanItems) {
         Write-Host "  Checking $item..." -ForegroundColor Gray -NoNewline
-        Start-Sleep -Milliseconds 300
+        Start-EscapableSleep -Milliseconds 300
         if ($item -eq "IDENTITY MATRIX") {
             Write-Host " [" -NoNewline -ForegroundColor Gray
             Write-Host "INFECTED" -NoNewline -ForegroundColor Red
@@ -1366,18 +1440,18 @@ function deadrabbit {
         }
     }
 
-    Start-Sleep -Milliseconds 400
+    Start-EscapableSleep -Milliseconds 400
     Write-Host ""
     Write-Host "WARNING: MALICIOUS CODE DETECTED" -ForegroundColor Red
     Write-Host "THREAT LEVEL: " -ForegroundColor DarkRed -NoNewline
     Write-Host "CATASTROPHIC" -ForegroundColor Red
-    Start-Sleep -Milliseconds 600
+    Start-EscapableSleep -Milliseconds 600
 
     # === PHASE 2: VIRUS SPREADING ===
     Clear-Host
     Write-Host ""
     Write-Host ">>> INFECTION SPREADING <<<" -ForegroundColor Red
-    Start-Sleep -Milliseconds 400
+    Start-EscapableSleep -Milliseconds 400
 
     $systems = @(
         @{name="Firewall"; status="BYPASSED"},
@@ -1392,51 +1466,51 @@ function deadrabbit {
         # Animate the infection
         1..3 | ForEach-Object {
             Write-Host "." -NoNewline -ForegroundColor DarkRed
-            Start-Sleep -Milliseconds 150
+            Start-EscapableSleep -Milliseconds 150
         }
         Write-Host " $($sys.status)" -ForegroundColor Red
-        Start-Sleep -Milliseconds 200
+        Start-EscapableSleep -Milliseconds 200
     }
 
-    Start-Sleep -Milliseconds 300
+    Start-EscapableSleep -Milliseconds 300
     Write-Host ""
 
     # Infection progress bar
     Write-Host "INFECTION PROGRESS: [" -ForegroundColor DarkRed -NoNewline
     1..20 | ForEach-Object {
         Write-Host ([char]0x2588) -NoNewline -ForegroundColor Red
-        Start-Sleep -Milliseconds 80
+        Start-EscapableSleep -Milliseconds 80
     }
     Write-Host "] 100%" -ForegroundColor Red
-    Start-Sleep -Milliseconds 400
+    Start-EscapableSleep -Milliseconds 400
 
     # === PHASE 3: QUARANTINE ATTEMPT ===
     Clear-Host
     Write-Host ""
     Write-Host "INITIATING EMERGENCY QUARANTINE..." -ForegroundColor Yellow
-    Start-Sleep -Milliseconds 500
+    Start-EscapableSleep -Milliseconds 500
 
     Write-Host ""
     Write-Host "  Isolating infected sectors..." -ForegroundColor Yellow -NoNewline
-    Start-Sleep -Milliseconds 600
+    Start-EscapableSleep -Milliseconds 600
     Write-Host " FAILED" -ForegroundColor Red
 
     Write-Host "  Purging malicious code..." -ForegroundColor Yellow -NoNewline
-    Start-Sleep -Milliseconds 600
+    Start-EscapableSleep -Milliseconds 600
     Write-Host " FAILED" -ForegroundColor Red
 
     Write-Host "  Restoring from backup..." -ForegroundColor Yellow -NoNewline
-    Start-Sleep -Milliseconds 600
+    Start-EscapableSleep -Milliseconds 600
     Write-Host " CORRUPTED" -ForegroundColor Red
 
     Write-Host "  Contacting external support..." -ForegroundColor Yellow -NoNewline
-    Start-Sleep -Milliseconds 600
+    Start-EscapableSleep -Milliseconds 600
     Write-Host " BLOCKED" -ForegroundColor Red
 
-    Start-Sleep -Milliseconds 400
+    Start-EscapableSleep -Milliseconds 400
     Write-Host ""
     Write-Host "! ! ! QUARANTINE FAILED ! ! !" -ForegroundColor Red
-    Start-Sleep -Milliseconds 500
+    Start-EscapableSleep -Milliseconds 500
 
     # === PHASE 4: CONTAINMENT BREACH ===
     Clear-Host
@@ -1445,7 +1519,7 @@ function deadrabbit {
     Write-Host "    C O N T A I N M E N T" -ForegroundColor Red
     Write-Host "        B R E A C H" -ForegroundColor Red
     Write-Host "========================================" -ForegroundColor DarkRed
-    Start-Sleep -Milliseconds 800
+    Start-EscapableSleep -Milliseconds 800
 
     Write-Host ""
     $warningMsgs = @(
@@ -1457,29 +1531,29 @@ function deadrabbit {
 
     foreach ($msg in $warningMsgs) {
         Write-Host "  >> $msg" -ForegroundColor Red
-        Start-Sleep -Milliseconds 400
+        Start-EscapableSleep -Milliseconds 400
     }
 
-    Start-Sleep -Milliseconds 500
+    Start-EscapableSleep -Milliseconds 500
 
     # === PHASE 5: FINAL TERMINATION SEQUENCE ===
     Clear-Host
     Write-Host ""
     Write-Host ""
     Write-Host "  There is no patch." -ForegroundColor DarkRed
-    Start-Sleep -Milliseconds 800
+    Start-EscapableSleep -Milliseconds 800
     Write-Host "  There is no rollback." -ForegroundColor DarkRed
-    Start-Sleep -Milliseconds 800
+    Start-EscapableSleep -Milliseconds 800
     Write-Host "  There is only..." -ForegroundColor DarkRed
-    Start-Sleep -Milliseconds 1000
+    Start-EscapableSleep -Milliseconds 1000
 
     Write-Host ""
     Write-Host "    D E - R E S O L U T I O N" -ForegroundColor Red
-    Start-Sleep -Milliseconds 1200
+    Start-EscapableSleep -Milliseconds 1200
 
     Write-Host ""
     Write-Host "  Process $neoName terminated." -ForegroundColor DarkGray
-    Start-Sleep -Milliseconds 1500
+    Start-EscapableSleep -Milliseconds 1500
 
     # Launch Dead Matrix (skull reveal)
     matrix -Dead
@@ -1491,7 +1565,7 @@ function redrabbit {
     Clear-Host
     Write-Host ""
     Write-Host "  You took the red pill, $neoName..." -ForegroundColor Red
-    Start-Sleep -Milliseconds 1500
+    Start-EscapableSleep -Milliseconds 1500
     Clear-Host
 
     # Run the awakening sequence
@@ -1501,11 +1575,11 @@ function redrabbit {
     Write-Host ""
     Write-Host "LOADING REAL WORLD INTERFACE" -ForegroundColor Green -NoNewline
     1..3 | ForEach-Object {
-        Start-Sleep -Milliseconds 400
+        Start-EscapableSleep -Milliseconds 400
         Write-Host "." -NoNewline -ForegroundColor Green
     }
     Write-Host ""
-    Start-Sleep -Milliseconds 500
+    Start-EscapableSleep -Milliseconds 500
 
     # Launch classic Matrix (eyes adjusting to the real)
     matrix
@@ -1517,7 +1591,7 @@ function runrabbit {
     Clear-Host
     Write-Host ""
     Write-Host "  Run, $neoName. Run." -ForegroundColor Red
-    Start-Sleep -Milliseconds 1500
+    Start-EscapableSleep -Milliseconds 1500
     Clear-Host
 
     # Run the agent hunt sequence
@@ -1527,11 +1601,11 @@ function runrabbit {
     Write-Host ""
     Write-Host "STABILIZING AFTER EXIT" -ForegroundColor Green -NoNewline
     1..3 | ForEach-Object {
-        Start-Sleep -Milliseconds 400
+        Start-EscapableSleep -Milliseconds 400
         Write-Host "." -NoNewline -ForegroundColor Green
     }
     Write-Host ""
-    Start-Sleep -Milliseconds 500
+    Start-EscapableSleep -Milliseconds 500
 
     # Launch glitchy Matrix (tension remains)
     matrix -Glitch
@@ -1543,7 +1617,7 @@ function steelrabbit {
     Clear-Host
     Write-Host ""
     Write-Host "  The machines are coming, $neoName..." -ForegroundColor Cyan
-    Start-Sleep -Milliseconds 1500
+    Start-EscapableSleep -Milliseconds 1500
     Clear-Host
 
     # Run the sentinel swarm sequence
@@ -1553,11 +1627,11 @@ function steelrabbit {
     Write-Host ""
     Write-Host "SYSTEMS REBOOTING" -ForegroundColor Cyan -NoNewline
     1..3 | ForEach-Object {
-        Start-Sleep -Milliseconds 400
+        Start-EscapableSleep -Milliseconds 400
         Write-Host "." -NoNewline -ForegroundColor Cyan
     }
     Write-Host ""
-    Start-Sleep -Milliseconds 500
+    Start-EscapableSleep -Milliseconds 500
 
     # Launch cyan Matrix (machine color)
     matrix -Color Cyan
@@ -1569,7 +1643,7 @@ function onerabbit {
     Clear-Host
     Write-Host ""
     Write-Host "  He is The One, $neoName..." -ForegroundColor White
-    Start-Sleep -Milliseconds 1500
+    Start-EscapableSleep -Milliseconds 1500
     Clear-Host
 
     # Run the one protocol sequence
@@ -1579,11 +1653,11 @@ function onerabbit {
     Write-Host ""
     Write-Host "YOU NOW SEE THE CODE" -ForegroundColor Green -NoNewline
     1..3 | ForEach-Object {
-        Start-Sleep -Milliseconds 400
+        Start-EscapableSleep -Milliseconds 400
         Write-Host "." -NoNewline -ForegroundColor Green
     }
     Write-Host ""
-    Start-Sleep -Milliseconds 500
+    Start-EscapableSleep -Milliseconds 500
 
     # Launch freeze Matrix (Neo can stop the code)
     matrix -One
@@ -1595,7 +1669,7 @@ function glitchrabbit {
     Clear-Host
     Write-Host ""
     Write-Host "  Something's not right, $neoName..." -ForegroundColor Yellow
-    Start-Sleep -Milliseconds 1500
+    Start-EscapableSleep -Milliseconds 1500
     Clear-Host
 
     # Run the deja vu sequence
@@ -1605,11 +1679,11 @@ function glitchrabbit {
     Write-Host ""
     Write-Host "MATRIX DESTABILIZED" -ForegroundColor Red -NoNewline
     1..3 | ForEach-Object {
-        Start-Sleep -Milliseconds 400
+        Start-EscapableSleep -Milliseconds 400
         Write-Host "." -NoNewline -ForegroundColor Red
     }
     Write-Host ""
-    Start-Sleep -Milliseconds 500
+    Start-EscapableSleep -Milliseconds 500
 
     # Launch deja vu Matrix (stuttering reality)
     matrix -Deja
@@ -1621,7 +1695,7 @@ function exitrabbit {
     Clear-Host
     Write-Host ""
     Write-Host "  Find the exit, $neoName..." -ForegroundColor Yellow
-    Start-Sleep -Milliseconds 1500
+    Start-EscapableSleep -Milliseconds 1500
     Clear-Host
 
     # Run the phone trace sequence
@@ -1631,11 +1705,11 @@ function exitrabbit {
     Write-Host ""
     Write-Host "SAFE RETURN CONFIRMED" -ForegroundColor Green -NoNewline
     1..3 | ForEach-Object {
-        Start-Sleep -Milliseconds 400
+        Start-EscapableSleep -Milliseconds 400
         Write-Host "." -NoNewline -ForegroundColor Green
     }
     Write-Host ""
-    Start-Sleep -Milliseconds 500
+    Start-EscapableSleep -Milliseconds 500
 
     # Launch classic Matrix (back in the system)
     matrix
@@ -1647,7 +1721,7 @@ function trainrabbit {
     Clear-Host
     Write-Host ""
     Write-Host "  Time to train, $neoName..." -ForegroundColor Yellow
-    Start-Sleep -Milliseconds 1500
+    Start-EscapableSleep -Milliseconds 1500
     Clear-Host
 
     # Run the training sequence
@@ -1657,11 +1731,11 @@ function trainrabbit {
     Write-Host ""
     Write-Host "TRAINING COMPLETE" -ForegroundColor Green -NoNewline
     1..3 | ForEach-Object {
-        Start-Sleep -Milliseconds 400
+        Start-EscapableSleep -Milliseconds 400
         Write-Host "." -NoNewline -ForegroundColor Green
     }
     Write-Host ""
-    Start-Sleep -Milliseconds 500
+    Start-EscapableSleep -Milliseconds 500
 
     # Launch training construct Matrix (grid pattern)
     matrix -Train
@@ -1673,7 +1747,7 @@ function oraclerabbit {
     Clear-Host
     Write-Host ""
     Write-Host "  The Oracle is waiting, $neoName..." -ForegroundColor Magenta
-    Start-Sleep -Milliseconds 1500
+    Start-EscapableSleep -Milliseconds 1500
     Clear-Host
 
     # Run the oracle sequence
@@ -1683,11 +1757,11 @@ function oraclerabbit {
     Write-Host ""
     Write-Host "THE PATH REVEALS ITSELF" -ForegroundColor Magenta -NoNewline
     1..3 | ForEach-Object {
-        Start-Sleep -Milliseconds 400
+        Start-EscapableSleep -Milliseconds 400
         Write-Host "." -NoNewline -ForegroundColor Magenta
     }
     Write-Host ""
-    Start-Sleep -Milliseconds 500
+    Start-EscapableSleep -Milliseconds 500
 
     # Launch oracle Matrix (cryptic messages in the rain)
     matrix -Oracle
@@ -1711,7 +1785,7 @@ function operatormanual {
     Write-Host "|" -ForegroundColor Green
     Write-Host "  +----------------------------------------------------------------+" -ForegroundColor DarkGreen
     Write-Host ""
-    Start-Sleep -Milliseconds 500
+    Start-EscapableSleep -Milliseconds 500
 
     # Hacker Sequences Upload
     Write-Host "  DOWNLOADING: " -ForegroundColor Yellow -NoNewline
@@ -1719,7 +1793,7 @@ function operatormanual {
     Write-Host " [" -NoNewline -ForegroundColor DarkGray
     1..15 | ForEach-Object {
         Write-Host ([char]0x2588) -NoNewline -ForegroundColor Green
-        Start-Sleep -Milliseconds 25
+        Start-EscapableSleep -Milliseconds 25
     }
     Write-Host "] " -NoNewline -ForegroundColor DarkGray
     Write-Host "COMPLETE" -ForegroundColor Green
@@ -1751,7 +1825,7 @@ function operatormanual {
     Write-Host "    hacker -Oracle      " -ForegroundColor Yellow -NoNewline
     Write-Host "Cryptic prophecy" -ForegroundColor DarkGray
     Write-Host ""
-    Start-Sleep -Milliseconds 300
+    Start-EscapableSleep -Milliseconds 300
 
     # Matrix Rain Upload
     Write-Host "  DOWNLOADING: " -ForegroundColor Yellow -NoNewline
@@ -1759,7 +1833,7 @@ function operatormanual {
     Write-Host " [" -NoNewline -ForegroundColor DarkGray
     1..15 | ForEach-Object {
         Write-Host ([char]0x2588) -NoNewline -ForegroundColor Cyan
-        Start-Sleep -Milliseconds 25
+        Start-EscapableSleep -Milliseconds 25
     }
     Write-Host "] " -NoNewline -ForegroundColor DarkGray
     Write-Host "COMPLETE" -ForegroundColor Green
@@ -1781,7 +1855,7 @@ function operatormanual {
     Write-Host "    matrix -Train       " -ForegroundColor Yellow -NoNewline
     Write-Host "Grid construct (dojo)" -ForegroundColor DarkGray
     Write-Host ""
-    Start-Sleep -Milliseconds 300
+    Start-EscapableSleep -Milliseconds 300
 
     # Rabbit Holes Upload
     Write-Host "  DOWNLOADING: " -ForegroundColor Yellow -NoNewline
@@ -1789,7 +1863,7 @@ function operatormanual {
     Write-Host " [" -NoNewline -ForegroundColor DarkGray
     1..15 | ForEach-Object {
         Write-Host ([char]0x2588) -NoNewline -ForegroundColor Magenta
-        Start-Sleep -Milliseconds 25
+        Start-EscapableSleep -Milliseconds 25
     }
     Write-Host "] " -NoNewline -ForegroundColor DarkGray
     Write-Host "COMPLETE" -ForegroundColor Green
@@ -1842,7 +1916,7 @@ function operatormanual {
         Clear-Host
         Write-Host ""
         Write-Host "  There is no spoon..." -ForegroundColor DarkGray
-        Start-Sleep -Milliseconds 800
+        Start-EscapableSleep -Milliseconds 800
         Clear-Host
     } else {
         neo
