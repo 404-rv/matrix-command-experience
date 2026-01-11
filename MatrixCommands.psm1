@@ -43,8 +43,138 @@ function Start-EscapableSleep {
     }
 }
 
+# Intro skip flag
+$script:IntroSkipped = $false
+
+# Animated Matrix intro sequence
+function Show-MatrixIntro {
+    $ESC = [char]27
+    Write-Host "$ESC[?25l" -NoNewline  # Hide cursor
+    Clear-Host
+    $script:IntroSkipped = $false
+
+    # Helper to check for Enter key skip
+    function Test-IntroSkip {
+        if ([Console]::KeyAvailable) {
+            $key = [Console]::ReadKey($true)
+            if ($key.Key -eq 'Enter') {
+                $script:IntroSkipped = $true
+                return $true
+            }
+        }
+        return $false
+    }
+
+    $width = $Host.UI.RawUI.WindowSize.Width
+    $height = $Host.UI.RawUI.WindowSize.Height
+
+    # Phase 1: "Wake up, Neo..."
+    $centerY = [Math]::Floor($height / 2) - 2
+    $messages = @(
+        "Wake up, Neo...",
+        "The Matrix has you...",
+        "Follow the white rabbit."
+    )
+
+    foreach ($msg in $messages) {
+        if ($script:IntroSkipped) { break }
+        $centerX = [Math]::Floor(($width - $msg.Length) / 2)
+        [Console]::SetCursorPosition($centerX, $centerY)
+
+        # Typewriter effect
+        foreach ($char in $msg.ToCharArray()) {
+            if (Test-IntroSkip) { break }
+            Write-Host $char -ForegroundColor Green -NoNewline
+            Start-EscapableSleep -Milliseconds 80
+        }
+        if ($script:IntroSkipped) { break }
+        Start-EscapableSleep -Milliseconds 600
+        if (Test-IntroSkip) { break }
+
+        # Fade out by clearing
+        [Console]::SetCursorPosition($centerX, $centerY)
+        Write-Host (" " * $msg.Length)
+        Start-EscapableSleep -Milliseconds 200
+        Test-IntroSkip | Out-Null
+    }
+
+    # Phase 2: ASCII Rabbit hops across screen
+    if (-not $script:IntroSkipped) {
+        $rabbit = @(
+            "(\(\  ",
+            "(-.-)o",
+            "o_('')"
+        )
+        $rabbitWidth = 6
+        $rabbitY = $centerY - 1
+
+        for ($x = -$rabbitWidth; $x -lt $width + 5; $x += 4) {
+            if (Test-IntroSkip) { break }
+            # Clear previous position
+            if ($x -gt 0) {
+                for ($r = 0; $r -lt 3; $r++) {
+                    [Console]::SetCursorPosition([Math]::Max(0, $x - 4), $rabbitY + $r)
+                    Write-Host "      " -NoNewline
+                }
+            }
+
+            # Draw rabbit at new position
+            if ($x -ge 0 -and $x -lt $width - $rabbitWidth) {
+                for ($r = 0; $r -lt 3; $r++) {
+                    [Console]::SetCursorPosition($x, $rabbitY + $r)
+                    Write-Host $rabbit[$r] -ForegroundColor White -NoNewline
+                }
+            }
+
+            Start-EscapableSleep -Milliseconds 60
+        }
+    }
+
+    # Phase 3: Quick digital rain burst
+    if (-not $script:IntroSkipped) {
+        $chars = @('0','1')
+        $rng = New-Object System.Random
+        Clear-Host
+
+        for ($frame = 0; $frame -lt 12; $frame++) {
+            if (Test-IntroSkip) { break }
+            for ($drop = 0; $drop -lt ($frame * 15); $drop++) {
+                $dx = $rng.Next(0, $width)
+                $dy = $rng.Next(0, $height - 1)
+                [Console]::SetCursorPosition($dx, $dy)
+                $char = $chars[$rng.Next(0, $chars.Count)]
+                $color = @("Green", "DarkGreen", "Green", "DarkGreen", "White")[$rng.Next(0,5)]
+                Write-Host $char -ForegroundColor $color -NoNewline
+            }
+            Start-EscapableSleep -Milliseconds 40
+        }
+    }
+
+    # Final flash
+    if (-not $script:IntroSkipped) {
+        Start-EscapableSleep -Milliseconds 100
+        Clear-Host
+        $knockMsg = "Knock, knock, Neo."
+        $centerX = [Math]::Floor(($width - $knockMsg.Length) / 2)
+        [Console]::SetCursorPosition($centerX, $centerY)
+        Write-Host $knockMsg -ForegroundColor Green
+        Start-EscapableSleep -Milliseconds 800
+    }
+
+    Write-Host "$ESC[?25h" -NoNewline  # Show cursor
+}
+
 # Neo Menu - Matrix command center (interactive)
 function neo {
+    param(
+        [switch]$SkipIntro
+    )
+
+    # Show intro unless skipped
+    if (-not $SkipIntro) {
+        Show-MatrixIntro
+    }
+
     $neoName = "Neo_$($env:USERNAME)"
 
     $neoItems = @(
@@ -1927,6 +2057,7 @@ function operatormanual {
 Export-ModuleMember -Function @(
     'Write-Typewriter',
     'Show-NeoItem',
+    'Show-MatrixIntro',
     'neo',
     'hacker',
     'matrix',

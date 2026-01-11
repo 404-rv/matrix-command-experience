@@ -137,8 +137,18 @@ Complete experiences combining a hacker sequence with matching rain:
 | `trainrabbit` | Dojo training -> grid matrix |
 | `oraclerabbit` | Prophecy -> oracle matrix |
 
+### Animated Intro
+When you launch `neo`, you'll experience the iconic Matrix intro:
+1. **"Wake up, Neo..."** - Typewriter messages fade in and out
+2. **White Rabbit** - ASCII rabbit hops across your screen
+3. **Digital Rain Burst** - Brief cascade of Matrix code
+4. **"Knock, knock, Neo."** - Final message before menu
+
+Press **Enter** at any time to skip the intro.
+
 ### Interactive Menu
 Type `neo` to launch the Matrix Command Experience menu with:
+- Animated intro sequence (press Enter to skip)
 - Typewriter effect header animation
 - All commands organized by category
 - Operator Manual (`?`) to learn commands with themed "skill upload" presentation
@@ -147,8 +157,11 @@ Type `neo` to launch the Matrix Command Experience menu with:
 
 ### Quick Start
 ```powershell
-# Launch the interactive menu
+# Launch the interactive menu (with intro)
 neo
+
+# Skip the intro animation
+neo -SkipIntro
 
 # Run a hacker sequence directly
 hacker -Wake
@@ -160,8 +173,10 @@ matrix
 whiterabbit
 ```
 
-### Exiting Screensavers
-Press any key to exit the matrix rain effects.
+### Exiting Animations
+- **Matrix rain**: Press any key to exit
+- **Hacker sequences**: Press **Escape** at any time to exit
+- **Intro sequence**: Press **Enter** to skip
 
 ### Customization
 
