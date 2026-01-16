@@ -1,6 +1,6 @@
 # Matrix Command Experience
 
-**A Fun Learning Experiment by Sassy Labs**
+**A Fun Learning Experiment by SaaSy Labs**
 
 Transform your PowerShell terminal into a Matrix-themed command center with digital rain effects, hacker sequences, and interactive experiences.
 
