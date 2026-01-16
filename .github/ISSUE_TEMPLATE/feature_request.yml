@@ -1,0 +1,65 @@
+name: Feature Request
+description: Suggest a new feature or enhancement
+title: "[Feature]: "
+labels: ["enhancement", "needs-review"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Got an idea for a new Matrix effect or improvement? We'd love to hear it!
+
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem or Need
+      description: What problem does this feature solve? What would it enable?
+      placeholder: "I want to be able to..."
+    validations:
+      required: true
+
+  - type: textarea
+    id: solution
+    attributes:
+      label: Proposed Solution
+      description: Describe your ideal implementation
+      placeholder: "A new command called `matrix -Architect` that..."
+    validations:
+      required: true
+
+  - type: dropdown
+    id: type
+    attributes:
+      label: Feature Type
+      options:
+        - New matrix rain variant
+        - New hacker sequence
+        - New rabbit hole experience
+        - Performance improvement
+        - Customization option
+        - Documentation
+        - Other
+    validations:
+      required: true
+
+  - type: dropdown
+    id: priority
+    attributes:
+      label: How important is this to you?
+      options:
+        - Nice to have
+        - Would use regularly
+        - Critical for my workflow
+    validations:
+      required: true
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives Considered
+      description: Any alternative solutions you've thought about?
+
+  - type: textarea
+    id: additional
+    attributes:
+      label: Additional Context
+      description: Screenshots, mockups, references to Matrix scenes, etc.

@@ -1,0 +1,76 @@
+name: Bug Report
+description: Report a bug or unexpected behavior
+title: "[Bug]: "
+labels: ["bug", "needs-triage"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for reporting a bug! Please fill out the information below.
+
+  - type: textarea
+    id: description
+    attributes:
+      label: Bug Description
+      description: A clear description of what the bug is
+      placeholder: "The matrix rain animation freezes after..."
+    validations:
+      required: true
+
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to Reproduce
+      description: How can we reproduce this issue?
+      placeholder: |
+        1. Open Windows Terminal
+        2. Run `neo`
+        3. Select 'matrix'
+        4. See error
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected Behavior
+      description: What should have happened?
+    validations:
+      required: true
+
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual Behavior
+      description: What actually happened?
+    validations:
+      required: true
+
+  - type: dropdown
+    id: terminal
+    attributes:
+      label: Terminal
+      description: Which terminal are you using?
+      options:
+        - Windows Terminal
+        - PowerShell 7 (pwsh)
+        - Windows PowerShell 5.1
+        - VS Code Terminal
+        - Other (specify in description)
+    validations:
+      required: true
+
+  - type: input
+    id: ps-version
+    attributes:
+      label: PowerShell Version
+      description: Run `$PSVersionTable.PSVersion` and paste the result
+      placeholder: "5.1.19041.4170"
+    validations:
+      required: true
+
+  - type: textarea
+    id: additional
+    attributes:
+      label: Additional Context
+      description: Any other information that might help (screenshots, error messages, etc.)

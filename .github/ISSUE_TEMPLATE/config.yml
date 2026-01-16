@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Discussions
+    url: https://github.com/404-rv/matrix-command-experience/discussions
+    about: Ask questions and discuss ideas in Discussions
+  - name: README
+    url: https://github.com/404-rv/matrix-command-experience#readme
+    about: Check the README for installation and usage instructions
